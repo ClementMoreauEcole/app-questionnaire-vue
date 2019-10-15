@@ -1,15 +1,18 @@
 <template>
-  <div class="hello">
-    <h1>{{ msg }}</h1>
+  <div class="Question">
+    <h1>{{question.id}} - {{question.intitule}} </h1>
+   <div v-for=" unchoix in question.choix">
+    <input type="checkbox">
+    <label for="scales">{{unchoix.libelle}}</label>
+  </div>
+    {{question}}
   </div>
 </template>
 
 <script>
 export default {
-  name: 'HelloWorld',
-  props: {
-    msg: String
-  }
+  name: 'Question',
+  props:["question"],
 }
 </script>
 

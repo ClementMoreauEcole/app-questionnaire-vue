@@ -1,14 +1,18 @@
 <template>
-  <div class="hello">
-    <h1>{{ msg }}</h1>
+  <div class="Utilisateur">
+    <h1>{{ nom }}</h1>
+    <h1>{{ prenom }}</h1>
+    <h1>{{ societe }}</h1>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'HelloWorld',
+  name: 'Utilisateur',
   props: {
-    msg: String
+    nom: String,
+    prenom: String,
+    societe: String
   }
 }
 </script>

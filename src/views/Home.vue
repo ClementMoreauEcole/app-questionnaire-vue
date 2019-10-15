@@ -1,18 +1,30 @@
 <template>
   <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <input v-model="nom" placeholder="Entrez votre nom" >
+    <input v-model="prenom" placeholder="Entrez votre prénom" >
+    <input  v-model="societe" placeholder="Entrez votre société">
+    <Utilisateur :nom="nom" :prenom="prenom"  :societe="societe"/>
+
   </div>
 </template>
 
 <script>
 // @ is an alias to /src
-import HelloWorld from '@/components/HelloWorld.vue'
+import Utilisateur from '@/components/Utilisateur.vue'
 
 export default {
   name: 'home',
   components: {
-    HelloWorld
+    Utilisateur
+  },
+  data() {
+    return{
+      nom: null,
+      prenom: null,
+      societe: null
+    }
+    
   }
-}
+};
+
 </script>
