@@ -1,11 +1,16 @@
 <template>
   <div class="Question">
-    <h1>{{question.id}} - {{question.intitule}} </h1>
-   <div v-for=" unchoix in question.choix">
-    <input type="checkbox">
-    <label for="scales">{{unchoix.libelle}}</label>
-  </div>
-    {{question}}
+    <h1>Question {{question.id}}</h1>
+    <h2>{{question.intitule}} </h2>
+      <div>
+        <div class="leChoix" v-for="unchoix in question.choix">
+            <input v-model="question.reponse" type="checkbox" v-bind:value="unchoix.libelle">
+            <label  for="scales">{{unchoix.libelle}}</label>
+
+           
+        </div>
+         {{question}}
+      </div>
   </div>
 </template>
 
@@ -31,5 +36,13 @@ li {
 }
 a {
   color: #42b983;
+}
+.listeChoix{
+  display: flex;
+  flex-direction: row;
+
+}
+.leChoix{
+  align-items: center;
 }
 </style>
