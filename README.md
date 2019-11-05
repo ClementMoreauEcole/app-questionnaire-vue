@@ -22,3 +22,10 @@ npm run lint
 
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
+
+
+05/11/2019
+Objectif de la journée : 
+Ajouter la méthode de calcul des bonnes réponses.
+Implementation PoutchDB
+Enjoliver le CSS
