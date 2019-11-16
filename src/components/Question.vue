@@ -1,4 +1,5 @@
 <template>
+  <!-- Le corps du composant qui sera affiché a la place des balises du meme nom -->
   <div class="Question">
     <h1>Question {{question.id}}</h1>
     <h2>{{question.intitule}} </h2>

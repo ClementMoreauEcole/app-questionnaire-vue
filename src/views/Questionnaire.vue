@@ -2,18 +2,23 @@
   <div class="Questionnaire">
     <div>
       <div>
+        <!-- Les 3 balises input pour entrer le nom/prénom/societe -->
         <input v-if="!voirQuestion" v-model="nom" type="text" placeholder="Entrez votre nom">
         <input v-if="!voirQuestion" v-model="prenom" type="text" placeholder="Entrez votre prénom"> 
         <input v-if="!voirQuestion" v-model="societe" type="text" placeholder="Entrez votre société"> 
         <button v-if="!voirQuestion" v-on:click="dsplQuestion()">Aller aux questions !</button>
       </div>
-      
+      <!-- Le composant question qui affiche les questions -->
       <question v-if="!voirMesResultat && voirQuestion" :question="questions[currentQuestion]"></question>
-
+      
+      <!-- 
+        Partie résultat
+        Affiche le nom/Prenom/societe
+       -->
       <div v-if="voirMesResultat && voirQuestion">
         <h1>Nom : {{nom}}, Prenom: {{prenom}}, Societe: {{societe}}</h1>
         <h1>Mes résultats</h1>
-       
+       <!-- Boucle sur chaque questions afin d'y afficher les données souhaitées -->
         <div v-for="question in questions">
           <h1>Question {{question.id}}</h1>
           <h2>{{question.intitule}}</h2>
@@ -21,15 +26,16 @@
             <p>{{lechoix.libelle}} </p>
           </div>
           <h2>Vous avez choisi : {{question.reponse}}</h2>
-          
+          <!-- Affiche un message en vert si il s'agit d'une bonne réponse -->
           <h2 v-if="question.etatReponse" style="color: green;">Bonne réponse !</h2>
 
           
         </div>
+        <!-- Affiche le nombre de bonne réponse -->
          <h2>Vous avez {{nbBonneReponse}} bonne réponse</h2>
       </div>
 
-
+      <!-- Les bouton permettant le changement de question ainsi que l'affichage des réponses -->
       <button v-if="!derniereQuestion() && !voirMesResultat && voirQuestion" v-on:click="questSuivante()">Suivante</button>
       <button v-if="!premiereQuestion() && !voirMesResultat && voirQuestion" v-on:click="questionPrecedente()">Precedente</button>
       <button v-if="derniereQuestion() && voirQuestion" v-on:click="finQuestionnaire()">Mes résultats</button>
@@ -38,8 +44,8 @@
 </template>
 
 <script>
-// @ is an alias to /src
 import question from "../components/Question.vue";
+import pouchdb from "pouchdb";
 
 export default {
   name: "Questionnaire",
@@ -48,6 +54,7 @@ export default {
   },
   data() {
     return {
+      // Scruture des données utilisées dans le code ( je n'ai pas eux le temps de faire un fichier json séparer)
       nom: null,
       prenom: null,
       societe: null,
@@ -98,12 +105,15 @@ export default {
     };
   },
   methods: {
+    // Permet de passer a la question suivante
     questSuivante() {
       return this.currentQuestion++
     },
+    // Permet de revenir a la question precedente 
     questionPrecedente() {
       return this.currentQuestion--
     },
+    // Permet de savoir si la question courrante est bien la dernière question
     derniereQuestion() {
       if (this.currentQuestion < this.questions.length - 1) {
         return false
@@ -111,6 +121,7 @@ export default {
         return true
       }
     },
+    // Permet de savoir si la question courrante est bien la premiere question
     premiereQuestion() {
       if (this.currentQuestion == 0) {
         return true
@@ -118,28 +129,29 @@ export default {
         return false
       }
     },
+    // Permet de calculer le nombre de bonne réponses et d'afficher la page des résultat
     finQuestionnaire() {
-      console.log("fin questionaire")
+      var db = new pouchdb('dbVueJS')
+
       for(var i = 0; i<this.questions.length; i++){
+        // Recupere le nombre de réponses de l'utilisateur
           var nbReponse = this.questions[i].reponse.length
-          console.log("nbReponse : " + nbReponse)
-          console.log("Nb reponse attendue : " + this.questions[i].bonneReponse.length)
           var nbReponseBonne = 0
+          // Effectue une premiere vérification afin de voir si le nombre de réponses de l'utilisateur est bien le meme que le nombre de réponses attendue
+          // Permet de minimiser le traitement en cas de mauvaise réponses
           if(nbReponse == this.questions[i].bonneReponse.length){
             for( var j = 0; j<this.questions[i].bonneReponse.length; j++){
-              console.log("meme nombre")
-              console.log("Bonne reponse : " +this.questions[i].bonneReponse[j])
               for( var h = 0; h<this.questions[i].reponse.length; h++){
-                console.log("boucle h")
-                console.log("Reponse : " +this.questions[i].reponse[h])
+                // Pour chaque réponses de l'utilisateur on vérifie que la réponse est bien présente dans les réponses attendues
                 if(this.questions[i].reponse[j] == this.questions[i].bonneReponse[h]){
-                  console.log("compteur ++ ")
+                  // Incrémente la variable des bonnes réponses de l'utilisateur
                   nbReponseBonne++;
                 }
               }
             }
+            // Vérifie que le nombre de bonne réponse de l'utilisateur est le meme que le nombre de bonne réponses attendue
+            // Permet d'incrémenter le compteur de bonne réponse et de passer l'état de la question a vrai ( ce qui permet de facilement identifier les bonnes réponses)
             if(nbReponse == nbReponseBonne){
-            console.log("on passe")
             this.questions[i].etatReponse = true
             this.nbBonneReponse++
           }
@@ -149,10 +161,18 @@ export default {
           
           
         }
-      
+      // Permet l'affichage de la grille des réponses
       this.voirMesResultat = true
+      // Envoie en bdd
+      db.put({
+            _id: this.nom+this.prenom+this.societe+(Math.random()*100000),
+            societe: this.societe,
+            nom: this.nom,
+            prenom: this.prenom,
+            reponses: this.questions
+            });
     },
-
+    // Permet d'afficher les questions 
     dsplQuestion(){
       this.voirQuestion = true
     },
