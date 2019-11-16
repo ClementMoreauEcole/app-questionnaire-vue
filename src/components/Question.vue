@@ -10,7 +10,6 @@
 
            
         </div>
-         {{question}}
       </div>
   </div>
 </template>

@@ -28,6 +28,8 @@
           <h2>Vous avez choisi : {{question.reponse}}</h2>
           <!-- Affiche un message en vert si il s'agit d'une bonne réponse -->
           <h2 v-if="question.etatReponse" style="color: green;">Bonne réponse !</h2>
+          <h2 v-if="!question.etatReponse" style="color: red;">Mauvaise réponse !</h2>
+          <h2 v-if="!question.etatReponse">La bonne réponse était {{question.bonneReponse}}</h2> 
 
           
         </div>
